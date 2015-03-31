@@ -1,0 +1,258 @@
+<html>
+<head>
+  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"> 
+
+  <!-- link rel=\"stylesheet\" href=\"http://acm.math.spbu.ru/~sk1/colorer1/xcode.css\">
+  <script src=\"http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js\"></script>
+  <script>hljs.initHighlightingOnLoad();</script -->
+
+  <link rel=\"stylesheet\" title=\"Default\" href=\"http://acm.math.spbu.ru/~sk1/colorer/my.css\">
+  <script src=\"http://acm.math.spbu.ru/~sk1/colorer/highlight.js\"></script>
+  <script src=\"http://acm.math.spbu.ru/~sk1/colorer/cpp.js\"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+
+<pre><code>
+/*
+ * SegmentTree.cpp
+ *
+ * Min, Max, Sum, Update, Update on Sequence
+ * Requests:
+ * 0 &lt;= l &lt; r &lt;= n
+ *
+ *  Created on: Mar 29, 2015
+ *      Author: dima
+ */
+
+#include &lt;bits/stdc++.h&gt;
+
+const int INF = 1234567890;
+const int N = int(1e5);
+
+int a[N];
+
+struct Node {
+	int L, R;
+	Node *l, *r;
+	int val;
+
+	// keys : sum, minimum, maximum
+	int sum, minKey, maxKey;
+	int block;
+
+	Node() :
+		L(-1), R(-1), l(nullptr), r(nullptr), val(0), sum(0), minKey(INF), maxKey(-INF), block(-INF) {};
+
+	Node(int L, int R) : Node() {
+		this-&gt;L = L;
+		this-&gt;R = R;
+	}
+
+	Node(int L, int R, int val) : Node(L, R) {
+		this-&gt;val = val;
+		sum = val;
+		minKey = val;
+		maxKey = val;
+	}
+
+	Node(Node *l, Node *r) : Node() {
+		this-&gt;l = l;
+		this-&gt;r = r;
+		L = l-&gt;L;
+		R = r-&gt;R;
+		sum = l-&gt;sum + r-&gt;sum;
+		minKey = std::min(l-&gt;minKey, r-&gt;minKey);
+		maxKey = std::max(l-&gt;maxKey, r-&gt;maxKey);
+	}
+};
+
+Node *buildTree(int L, int R) {
+	if (R - L == 1) return new Node(L, R, a[L]);
+	int M = (L + R) &gt;&gt; 1;
+	return new Node(buildTree(L, M), buildTree(M, R));
+}
+
+/*
+ * Help func-s
+ */
+
+void setVal(Node *node, int val) {
+	if (!node) return;
+	int L = node-&gt;L;
+	int R = node-&gt;R;
+	node-&gt;val = val;
+	node-&gt;sum = (R - L) * val;
+	node-&gt;minKey = val;
+	node-&gt;maxKey = val;
+	node-&gt;block = val;
+}
+
+void push(Node *node) {
+	if (!node) return;
+	if (node-&gt;block != -INF) {
+		setVal(node-&gt;l, node-&gt;block);
+		setVal(node-&gt;r, node-&gt;block);
+		node-&gt;block = -INF;
+	}
+}
+
+int getSum(Node *node) {
+	return node ? node-&gt;sum : 0;
+}
+
+int getMinKey(Node *node) {
+	return node ? node-&gt;minKey : INF;
+}
+
+int getMaxKey(Node *node) {
+	return node ? node-&gt;maxKey : -INF;
+}
+
+void relax(Node *node) {
+	if (!node) return;
+	node-&gt;sum = getSum(node-&gt;l) + getSum(node-&gt;r);
+	node-&gt;minKey = std::min(getMinKey(node-&gt;l), getMinKey(node-&gt;r));
+	node-&gt;maxKey = std::max(getMaxKey(node-&gt;l), getMaxKey(node-&gt;r));
+}
+
+/*
+ * Update
+ */
+
+void updateKey(Node *node, int pos, int val) {
+	if (node-&gt;R - node-&gt;L == 1) {
+		setVal(node, val);
+		return;
+	}
+
+	push(node);
+
+	if (pos &lt; node-&gt;l-&gt;R) {
+		updateKey(node-&gt;l, pos, val);
+	} else {
+		updateKey(node-&gt;r, pos, val);
+	}
+
+	relax(node);
+}
+
+void updateKeySeq(Node *node, int L, int R, int val) {
+	if (node-&gt;R &lt;= L || R &lt;= node-&gt;L) {
+		return;
+	}
+
+	if (L &lt;= node-&gt;L && node-&gt;R &lt;= R) {
+		setVal(node, val);
+		return;
+	}
+
+	push(node);
+
+	updateKeySeq(node-&gt;l, L, R, val);
+	updateKeySeq(node-&gt;r, L, R, val);
+
+	relax(node);
+}
+
+/*
+ * Get
+ */
+
+int getSum(Node *node, int L, int R) {
+	if (node-&gt;R &lt;= L || R &lt;= node-&gt;L) {
+		return 0;
+	}
+
+	if (L &lt;= node-&gt;L && node-&gt;R &lt;= R) {
+		return node-&gt;sum;
+	}
+
+	push(node);
+
+	return getSum(node-&gt;l, L, R) + getSum(node-&gt;r, L, R);
+}
+
+int getMinKey(Node *node, int L, int R) {
+	if (node-&gt;R &lt;= L || R &lt;= node-&gt;L) {
+		return INF;
+	}
+
+	if (L &lt;= node-&gt;L && node-&gt;R &lt;= R) {
+		return node-&gt;minKey;
+	}
+
+	push(node);
+
+	return std::min(getMinKey(node-&gt;l, L, R), getMinKey(node-&gt;r, L, R));
+}
+
+int getMaxKey(Node *node, int L, int R) {
+	if (node-&gt;R &lt;= L || R &lt;= node-&gt;L) {
+		return -INF;
+	}
+
+	if (L &lt;= node-&gt;L && node-&gt;R &lt;= R) {
+		return node-&gt;maxKey;
+	}
+
+	push(node);
+
+	return std::max(getMaxKey(node-&gt;l, L, R), getMaxKey(node-&gt;r, L, R));
+}
+
+int main() {
+	int n;
+	scanf("%d", &n);
+
+	for (int i = 0; i &lt; n; i++) {
+		scanf("%d", a + i);
+	}
+
+	Node *root = buildTree(0, n);
+
+	int q;
+	scanf("%d", &q);
+
+	for (int i = 0; i &lt; q; i++) {
+		std::string request;
+		std::cin &gt;&gt; request;
+
+		if (request == "set") {
+			int pos, val;
+			scanf("%d%d", &pos, &val);
+
+			updateKey(root, pos - 1, val);
+		} else if (request == "setOnSeq") {
+			int l, r, val;
+			scanf("%d%d%d", &l, &r, &val);
+
+			updateKeySeq(root, l - 1, r, val);
+		} else if (request == "sum") {
+			int l, r;
+			scanf("%d%d", &l, &r);
+
+			int sumReq = getSum(root, l - 1, r);
+			printf("Sum on [%d..%d] = %d\n", l, r, sumReq);
+		} else if (request == "min") {
+			int l, r;
+			scanf("%d%d", &l, &r);
+
+			int minReq = getMinKey(root, l - 1, r);
+			printf("Minimum on [%d..%d] = %d\n", l, r, minReq);
+		} else if (request == "max") {
+			int l, r;
+			scanf("%d%d", &l, &r);
+
+			int maxReq = getMaxKey(root, l - 1, r);
+			printf("Maximum on [%d..%d] = %d\n", l, r, maxReq);
+		}
+	}
+}
+</code></pre>
+
+</body>
+</html>
+
+<font style=\"visibility:hidden\">
