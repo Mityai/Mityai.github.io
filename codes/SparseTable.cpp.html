@@ -1,0 +1,85 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script -->
+
+  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+
+<pre><code>
+/*
+ * SparseTable.cpp
+ *
+ * minimum on range
+ * [0..n)
+ * Requests:
+ * 0 &lt;= l &lt;= r &lt; n
+ *
+ *  Created on: Mar 29, 2015
+ *      Author: dima
+ */
+
+#include &lt;bits/stdc++.h&gt;
+
+const int N = int(1e5);
+const int K = 20;
+
+int n;
+int a[N];
+int f[K][N];
+int logK[N];
+
+void calculate() {
+    for (int i = 0; i &lt; n; i++) {
+        f[0][i] = a[i];
+    }
+
+    for (int k = 0; (1 &lt;&lt; (k + 1)) &lt; n; k++) {
+        for (int i = 0; i &lt; n; i++) {
+            f[k + 1][i] = std::min(f[k][i], f[k][i + (1 &lt;&lt; k)]);
+        }
+    }
+
+    for (int i = 2; i &lt; n; i++) {
+        logK[i] = logK[i &gt;&gt; 1] + 1;
+    }
+}
+
+int getMin(int L, int R) {
+    int k = logK[R - L + 1];
+    return std::min(f[k][L], f[k][R - (1 &lt;&lt; k) + 1]);
+}
+
+int main() {
+    scanf("%d", &n);
+
+    for (int i = 0; i &lt; n; i++) {
+        scanf("%d", &a[i]);
+    }
+
+    calculate();
+
+    int q;
+    scanf("%d", &q);
+
+    for (int i = 0; i &lt; q; i++) {
+        int l, r;
+        scanf("%d%d", &l, &r);
+
+        printf("Minimum on [%d..%d] = %d\n", l, r, getMin(l - 1, r - 1));
+    }
+}
+</code></pre>
+
+</body>
+</html>
+
+<font style="visibility:hidden">

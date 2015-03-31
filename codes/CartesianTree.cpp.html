@@ -1,0 +1,154 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script -->
+
+  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+
+<pre><code>
+/*
+ * CartesianTree.cpp
+ *
+ * Ordered Treap
+ * Merge, Split, Find, Insert, Erase, K-th
+ *
+ *  Created on: Mar 29, 2015
+ *      Author: dima
+ */
+
+#include &lt;bits/stdc++.h&gt;
+
+struct Node {
+    Node *l, *r;
+    int key, prior;
+    int sz;
+
+    Node() :
+        l(nullptr), r(nullptr), key(0), prior(rand()), sz(1) {};
+
+    Node(int key) : Node() {
+        this-&gt;key = key;
+    }
+};
+
+int getSize(Node *node) {
+    return node ? node-&gt;sz : 0;
+}
+
+void relax(Node *node) {
+    if (!node) return;
+    node-&gt;sz = 1 + getSize(node-&gt;l) + getSize(node-&gt;r);
+}
+
+Node *merge(Node *left, Node *right) {
+    if (!left) return right;
+    if (!right) return left;
+
+    if (left-&gt;prior &gt; right-&gt;prior) {
+        left-&gt;r = merge(left-&gt;r, right);
+        relax(left);
+        return left;
+    } else {
+        right-&gt;l = merge(left, right-&gt;l);
+        relax(right);
+        return right;
+    }
+}
+
+void split(Node *node, int key, Node *&left, Node *&right) {
+    if (!node) {
+        left = right = nullptr;
+        return;
+    }
+
+    if (node-&gt;key &lt;= key) {
+        split(node-&gt;r, key, node-&gt;r, right);
+        left = node;
+        relax(left);
+    } else {
+        split(node-&gt;l, key, left, node-&gt;l);
+        right = node;
+        relax(right);
+    }
+}
+
+void insert(Node *&root, int x) {
+    Node *A, *B;
+    split(root, x, A, B);
+    root = merge(A, new Node(x));
+    root = merge(root, B);
+}
+
+void erase(Node *&root, int x) {
+    Node *A, *T, *B;
+    split(root, x - 1, A, B);
+    split(B, x, T, B);
+    root = merge(A, B);
+}
+
+bool find(Node *node, int key) {
+    Node *A, *B, *C;
+    split(node, key - 1, A, B);
+    split(B, key, B, C);
+    node = merge(A, B);
+    node = merge(node, C);
+    return B != nullptr;
+}
+
+int findKth(Node *node, int k) {
+    assert(k &lt;= getSize(node));
+
+    if (getSize(node-&gt;l) + 1 == k) {
+        return node-&gt;key;
+    }
+
+    if (getSize(node-&gt;l) &gt; k) {
+        return findKth(node-&gt;l, k);
+    }
+
+    return findKth(node-&gt;r, k - getSize(node-&gt;l) - 1);
+}
+
+int main() {
+    srand(time(nullptr));
+
+    Node *root = nullptr;
+
+    int q;
+    scanf("%d", &q);
+
+    for (int i = 0; i &lt; q; i++) {
+        std::string request;
+        std::cin &gt;&gt; request;
+
+        int x;
+        scanf("%d", &x);
+
+        if (request == "insert") {
+            if (!find(root, x)) {
+                insert(root, x);
+            }
+        } else if (request == "delete") {
+            erase(root, x);
+        } else if (request == "exists") {
+            find(root, x) ? puts("true") : puts("false");
+        } else if (request == "kth") {
+            printf("%d\n", findKth(root, x));
+        }
+    }
+}
+</code></pre>
+
+</body>
+</html>
+
+<font style="visibility:hidden">

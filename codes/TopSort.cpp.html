@@ -1,0 +1,76 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script -->
+
+  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+</head>
+
+<body>
+
+<pre><code>
+/*
+ * TopSort.cpp
+ *
+ *  Created on: Mar 30, 2015
+ *      Author: dima
+ */
+
+#include &lt;bits/stdc++.h&gt;
+
+const int N = int(1e5);
+
+std::vector&lt; std::vector&lt;int&gt; &gt; g;
+bool us[N];
+int vert[N];
+int h;
+
+void dfs(int v) {
+    us[v] = true;
+    for (int u : g[v]) {
+        if (us[u] == false) {
+            dfs(u);
+        }
+    }
+
+    vert[--h] = v;
+}
+
+int main() {
+    int n, m;
+    scanf("%d%d", &n, &m);
+
+    g.resize(n);
+    for (int i = 0; i &lt; m; i++) {
+        int u, v;
+        scanf("%d%d", &u, &v);
+        --u, --v;
+
+        g[u].push_back(v);
+    }
+
+    h = n;
+    for (int v = 0; v &lt; n; v++) {
+        if (us[v] == false) {
+            dfs(v);
+        }
+    }
+
+    puts("Sorted:");
+    for (int i = 0; i &lt; n; i++) {
+        printf("%d ", vert[i] + 1);
+    }
+    printf("\n");
+}
+</code></pre>
+
+</body>
+</html>
+
+<font style="visibility:hidden">
