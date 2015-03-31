@@ -22,13 +22,13 @@
  * [0..n)
  * Sum, Add, Set
  * Requests:
- * 0 <= l <= r < n
+ * 0 &lt;= l &lt;= r &lt; n
  *
  *  Created on: Mar 29, 2015
  *      Author: dima
  */
 
-#include <bits/stdc++.h>
+#include &lt;bits/stdc++.h&gt;
 
 const int N = int(1e6);
 
@@ -45,7 +45,7 @@ inline int down(int x) {
 }
 
 void add(int pos, int val) {
-	for (int i = pos; i < n; i = up(i)) {
+	for (int i = pos; i &lt; n; i = up(i)) {
 		fenw[i] += val;
 	}
 }
@@ -61,7 +61,7 @@ int getSum(int pos) {
 int main() {
 	scanf("%d", &n);
 
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i &lt; n; i++) {
 		scanf("%d", &a[i]);
 
 		add(i, a[i]);
@@ -70,7 +70,7 @@ int main() {
 	int q;
 	scanf("%d", &q);
 
-	for (int i = 0; i < q; i++) {
+	for (int i = 0; i &lt; q; i++) {
 		std::string request;
 		std::cin >> request;
 
@@ -97,6 +97,7 @@ int main() {
 	}
 }
 </code></pre>
+
 </body>
 </html>
 
