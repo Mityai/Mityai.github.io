@@ -34,6 +34,11 @@ begin
   getY := -y + 240;
 end;
 
+function tan(x : real) : real;
+begin
+  tan := Sin(x) / Cos(x);
+end;
+
 procedure Decart;
 begin
   Line(  0, 240, 640, 240);
@@ -63,10 +68,10 @@ begin
   begin
     left := 160 * i;
     x := -Pi / 2 + 0.01;
-    MoveTo(getX(left + round(x * koef)), getY(round(k * sin(x) / cos(x))));
+    MoveTo(getX(left + round(x * koef)), getY(round(k * tan(x))));
     while (x &lt; Pi / 2) do
     begin
-      LineTo(getX(left + round(x * koef)), getY(round(k * sin(x) / cos(x))));
+      LineTo(getX(left + round(x * koef)), getY(round(k * tan(x))));
       x := x + h;
     end;
   end;
