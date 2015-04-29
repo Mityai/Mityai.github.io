@@ -1,0 +1,83 @@
+<html>
+							<head>
+							  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+							  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script -->
+
+							  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script>
+							</head>
+
+							<body>
+
+							<pre><code>
+uses graph, crt;
+
+const h = 0.13;
+
+var
+  D, m : integer;
+  i, k, left : integer;
+  mPI, mPI2, x, koef : real;
+
+function getX(x : integer) : integer;
+begin
+  getX := x + 320;
+end;
+
+function getY(y : integer) : integer;
+begin
+  getY := -y + 240;
+end;
+
+procedure Decart;
+begin
+  Line(0  , 240, 640, 240);
+  Line(625, 235, 640, 240);
+  Line(625, 245, 640, 240);
+  OutTextXY(620, 220, 'x');
+
+  Line(320,   0, 320, 480);
+  Line(320,   0, 315,  15);
+  Line(320,   0, 325,  15);
+  OutTextXY(300, 5, 'y');
+end;
+
+begin
+  assign(output, 'output.txt');
+  rewrite(output);
+
+  D := detect;
+  InitGraph(D, m, '');
+  Decart;
+
+  k := 10;
+  mPI := 160;
+  mPI2 := 80;
+  koef := mPI / Pi;
+
+  for i := -1 to 1 do
+  begin
+    left := 160 * i;
+    x := -Pi / 2 + 0.01;
+    MoveTo(getX(left + round(x * koef)), getY(k * round(sin(x) / cos(x))));
+    while (x &lt; Pi / 2) do
+    begin
+      LineTo(getX(left + round(x * koef)), getY(k * round(sin(x) / cos(x))));
+      x := x + h;
+    end;
+  end;
+
+  ReadKey;
+  close(output);
+end.
+</code></pre>
+
+							</body>
+							</html>
+
+							<font style="visibility:hidden">
