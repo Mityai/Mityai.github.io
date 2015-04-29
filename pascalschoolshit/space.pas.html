@@ -1,0 +1,137 @@
+<html>
+							<head>
+							  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+							  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script -->
+
+							  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script>
+							</head>
+
+							<body>
+
+							<pre><code>
+uses graph, crt;
+
+const h = 0.13;
+const k = 10;
+
+var
+  D, m : integer;
+  angle : real;
+  starX, starY : array[1..1000] of integer;
+
+function getX(x : integer) : integer;
+begin
+  getX := x + 320;
+end;
+
+function getY(y : integer) : integer;
+begin
+  getY := -y + 240;
+end;
+
+function getPosX(t, a : real) : real;
+begin
+  getPosX := a * Cos(t);
+end;
+
+function getPosY(t, b : real) : real;
+begin
+  getPosY := b * Sin(t);
+end;
+
+procedure Init;
+begin
+  D := detect;
+  InitGraph(D, m, '');
+  Randomize;
+end;
+
+procedure GetStars(n : integer);
+var i : integer;
+begin
+  for i := 1 to n do
+  begin
+    starX[i] := Random(640);
+    starY[i] := Random(480);
+  end;
+end;
+
+procedure DrawStars(n : integer);
+var i : integer;
+begin
+  for i := 1 to n do
+  begin
+    if Random(10) &lt;= 8 then
+      PutPixel(starX[i], starY[i], White)
+    else
+      PutPixel(starX[i], starY[i], Black);
+  end;
+end;
+
+procedure DrawSun(x, y, r : integer; cl : Word);
+var t, nx, ny : integer;
+begin
+  SetColor(cl);
+  SetFillStyle(SolidFill, cl);
+  FillEllipse(getX(x), getY(y), r, r);
+  for t := 0 to 11 do
+  begin
+    nx := Round(getPosX(t * Random(20) + 90, Random(10) + 70));
+    ny := Round(getPosY(t * Random(20) + 90, Random(10) + 70));
+    Line(getX(x), getY(y), getX(nx), getY(ny));
+  end;
+end;
+
+procedure DrawEarth(t : real; r : integer; cl : Word);
+var x, y : integer;
+begin
+  SetColor(cl);
+  SetFillStyle(SolidFill, cl);
+  x := Round(k * getPosX(t, 20));
+  y := Round(k * getPosY(t, 15));
+  FillEllipse(getX(x), getY(y), r, r);
+end;
+
+procedure DrawMoon(t : real; r : integer; cl : Word);
+var x, y : integer;
+    xEarth, yEarth : real;
+begin
+  xEarth := getPosX(t, 20);
+  yEarth := getPosY(t, 15);
+  SetColor(cl);
+  SetFillStyle(SolidFill, cl);
+  x := Round(k * (xEarth + getPosX(t * 150, 5)));
+  y := Round(k * (yEarth + getPosY(t * 150, 5)));
+  FillEllipse(getX(x), getY(y), r, r);
+end;
+
+begin
+  Init;
+  GetStars(1000);
+  angle := 0;
+  repeat
+    DrawStars(1000);
+    DrawSun(0, 0, 30, Yellow);
+    DrawEarth(angle, 15, Cyan);
+    DrawMoon(angle, 5, White);
+
+    Delay(120);
+
+    DrawSun(0, 0, 120, Black);
+    DrawEarth(angle, 15, Black);
+    DrawMoon(angle, 5, Black);
+    angle := angle + h;
+  until KeyPressed;
+end.
+</code></pre>
+
+							</body>
+							</html>
+
+							<font style="visibility:hidden">
