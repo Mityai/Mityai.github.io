@@ -45,13 +45,6 @@ begin
   getPosY := b * Sin(t);
 end;
 
-procedure Init;
-begin
-  D := detect;
-  InitGraph(D, m, '');
-  Randomize;
-end;
-
 procedure GetStars(n : integer);
 var i : integer;
 begin
@@ -109,7 +102,9 @@ begin
 end;
 
 begin
-  Init;
+  D := detect;
+  InitGraph(D, m, '');
+  
   GetStars(1000);
   DrawSun(0, 0, 30, Yellow);
   angle := 0;
