@@ -58,12 +58,12 @@ begin
   Decart;
 
   k := 20;
-  mPI := 160;
+  mPI := 180;
   koef := mPI / Pi;
 
   for i := -1 to 1 do
   begin
-    left := 160 * i;
+    left := Round(mPI * i);
     x := -Pi / 2 + 0.01;
     MoveTo(getX(left + round(x * koef)), getY(round(k * tan(x))));
     while (x &lt; Pi / 2) do
