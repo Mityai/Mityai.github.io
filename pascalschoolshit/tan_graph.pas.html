@@ -22,7 +22,7 @@ const h = 0.13;
 var
   D, m : integer;
   i, k, left : integer;
-  mPI, mPI2, x, koef : real;
+  mPI, x, koef : real;
 
 function getX(x : integer) : integer;
 begin
@@ -57,17 +57,16 @@ begin
 
   k := 10;
   mPI := 160;
-  mPI2 := 80;
   koef := mPI / Pi;
 
   for i := -1 to 1 do
   begin
     left := 160 * i;
     x := -Pi / 2 + 0.01;
-    MoveTo(getX(left + round(x * koef)), getY(k * round(sin(x) / cos(x))));
+    MoveTo(getX(left + round(x * koef)), getY(round(k * sin(x) / cos(x))));
     while (x &lt; Pi / 2) do
     begin
-      LineTo(getX(left + round(x * koef)), getY(k * round(sin(x) / cos(x))));
+      LineTo(getX(left + round(x * koef)), getY(round(k * sin(x) / cos(x))));
       x := x + h;
     end;
   end;
