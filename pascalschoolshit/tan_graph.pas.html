@@ -53,9 +53,6 @@ begin
 end;
 
 begin
-  assign(output, 'output.txt');
-  rewrite(output);
-
   D := detect;
   InitGraph(D, m, '');
   Decart;
@@ -77,7 +74,6 @@ begin
   end;
 
   ReadKey;
-  close(output);
 end.
 </code></pre>
 
