@@ -1,0 +1,98 @@
+<html>
+							<head>
+							  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+							  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script -->
+
+							  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script>
+                <style>
+                 h32 {
+                  background: #D9FFAD; /* Цвет фона под заголовком */
+                  padding: 0px; /* Поля вокруг текста */
+                 }
+                </style>
+							</head>
+
+							<body>
+
+							<pre><code>
+uses
+CRT, GRAPH;
+const h=<h32>0.013</h32>;
+left=<h32>-13</h32>;
+right=<h32>13</h32>;
+var
+ gd,gm:integer;
+ x,a,b,k,y,c:real;
+ procedure decart;
+ begin
+  line (10,240,630,240);
+  line (320,470,320,10);
+  line (310,30,320,10);
+  line (330,30,320,10);
+  line (610,230,630,240);
+  line (610,250,630,240);
+  outtextxy (310,5,'Y');
+  outtextxy (310,245,'O');
+  outtextxy (630,250, 'X');
+ end;
+ function f1(x:real):real;
+ begin
+  f1:=a*x*x+b*x+c;
+ end;
+ function f2(x:real):real;
+ begin
+  f2:=x*x*x;
+ end;
+ function f3(x:real):real;
+ begin
+  f3:=1/x;
+ end;
+ function f4(x:real):real;
+ begin
+  f4:=sqrt(x);
+ end;
+ function f5(x:real):real;
+ begin
+  f5:=sin(x);
+ end;
+ function f6(x:real):real;
+ begin
+  f6:=cos(x);
+ end;
+ function f7(x:real):real;
+ begin
+  f7:=sin(x)/cos(x);
+ end;
+ begin
+ <h32>k:=25;</h32>
+ gd:=detect;
+ InitGraph (gd,gm,'D:\BP\BGI');
+ decart;
+ read (a,b,c);
+ x:=left;
+ <h32>y:=f7(x);</h32>
+ <h32>moveto(round(k*x)+320, (-round(k*y)+240));</h32>
+ setcolor(2);
+ while x&lt;=right do
+  begin
+  y:=f7(x);
+  <h32>lineto (round(k*x)+320, (-round(k*y)+240));</h32>
+  <h32>if (f7(x) * f7(x+h) &lt; 0) then</h32>
+    <h32>moveto(round(k*(x+h))+320, -round(k*f7(x+h))+240);</h32>
+  <h32>x:=x+h;</h32>
+  end;
+  repeat
+  until KeyPressed;
+ end.
+</code></pre>
+
+							</body>
+							</html>
+
+							<font style="visibility:hidden">
