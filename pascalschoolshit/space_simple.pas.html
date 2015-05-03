@@ -10,6 +10,12 @@
 							  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
 							  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
 							  <script>hljs.initHighlightingOnLoad();</script>
+                <style>
+                 h32 {
+                  background: #D3D3D3; /* Цвет фона под заголовком */
+                  padding: 0px; /* Поля вокруг текста */
+                 }
+                </style>
 							</head>
 
 							<body>
@@ -25,31 +31,31 @@ var
   angle : real;
   starX, starY : array[1..1000] of integer;
 
-{Получение координаты x в декартовой системе координат}
+<h32>{Получение координаты x в декартовой системе координат}</h32>
 function getX(x : integer) : integer;
 begin
   getX := x + 320;
 end;
 
-{Получение координаты y в декартовой системе координат}
+<h32>{Получение координаты y в декартовой системе координат}</h32>
 function getY(y : integer) : integer;
 begin
   getY := -y + 240;
 end;
 
-{Получение координаты x эллипса с углом t и параметром a}
+<h32>{Получение координаты x эллипса с углом t и параметром a}</h32>
 function getPosX(t, a : real) : real;
 begin
   getPosX := a * Cos(t);
 end;
 
-{Получение координаты y эллипса с углом t и параметром b}
+<h32>{Получение координаты y эллипса с углом t и параметром b}</h32>
 function getPosY(t, b : real) : real;
 begin
   getPosY := b * Sin(t);
 end;
 
-{Запись координат n звёзд в массив (по x в starX, по y в starY)}
+<h32>{Запись координат n звёзд в массив (по x в starX, по y в starY)}</h32>
 procedure GetStars(n : integer);
 var i : integer;
 begin
@@ -60,7 +66,7 @@ begin
   end;
 end;
 
-{Рисуем n звезд}
+<h32>{Рисуем n звезд}</h32>
 procedure DrawStars(n : integer);
 var i : integer;
 begin
@@ -68,7 +74,7 @@ begin
     PutPixel(starX[i], starY[i], White);
 end;
 
-{Рисуем солнце с координатами (x, y) и радиусом r}
+<h32>{Рисуем солнце с координатами (x, y) и радиусом r}</h32>
 procedure DrawSun(x, y, r : integer; cl : Word);
 var t, nx, ny : integer;
 begin
@@ -76,7 +82,7 @@ begin
   SetFillStyle(SolidFill, cl);
   FillEllipse(getX(x), getY(y), r, r);
 
-  {Рисуем 12 лучиков от центра солнца (x, y) до точки на окружности (nx, ny)}
+  <h32>{Рисуем 12 лучиков от центра солнца (x, y) до точки на окружности (nx, ny)}</h32>
   for t := 0 to 11 do
   begin
     nx := Round(getPosX(t * 100, 80));
@@ -85,25 +91,25 @@ begin
   end;
 end;
 
-{Рисуем Землю. Угол t, радиус r}
+<h32>{Рисуем Землю. Угол t, радиус r}</h32>
 procedure DrawEarth(t : real; r : integer; cl : Word);
 var x, y : integer;
 begin
   SetColor(cl);
   SetFillStyle(SolidFill, cl);
-  {Вычисляем координаты Земли (двигается по эллипсу)}
+  <h32>{Вычисляем координаты Земли (двигается по эллипсу)}</h32>
   x := Round(k * getPosX(t, 20));
   y := Round(k * getPosY(t, 15));
   FillEllipse(getX(x), getY(y), r, r);
 end;
 
-{Рисуем Луну. Угол t, радиус r}
+<h32>{Рисуем Луну. Угол t, радиус r}</h32>
 procedure DrawMoon(t : real; r : integer; cl : Word);
 var x, y : integer;
     xEarth, yEarth : real;
 begin
-  {Вычисляем текущие координаты Земли (xEarth, yEarth)}
-  {Чтобы вычислить координаты Луны}
+  <h32>{Вычисляем текущие координаты Земли (xEarth, yEarth)}</h32>
+  <h32>{Чтобы вычислить координаты Луны}</h32>
   xEarth := getPosX(t, 20);
   yEarth := getPosY(t, 15);
   SetColor(cl);
@@ -122,14 +128,14 @@ begin
   DrawSun(0, 0, 30, Yellow);
   angle := 0;
   repeat
-    {Каждый раз заново рисуем звёзды, потому что те, что будут находится за Землей, будут ею "стираться"}
+    <h32>{Каждый раз заново рисуем звёзды, потому что те, что будут находится за Землей, будут ею "стираться"}</h32>
     DrawStars(1000);
     DrawEarth(angle, 15, Cyan);
     DrawMoon(angle, 5, White);
 
     Delay(120);
 
-    {Закрашиваем черным цветом Землю и Луну, то есть стираем их}
+    <h32>{Закрашиваем черным цветом Землю и Луну, то есть стираем их}</h32>
     DrawEarth(angle, 15, Black);
     DrawMoon(angle, 5, Black);
     angle := angle + h;
