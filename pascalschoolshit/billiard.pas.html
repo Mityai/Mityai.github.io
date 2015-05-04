@@ -36,6 +36,7 @@ begin
   SetFillStyle(SolidFill, Green);
   Bar(26, 105, 614, 375);
 
+  <h32>{Зеленая часть бортиков}</h32>
   SetColor(LightGreen);
   SetFillStyle(SolidFill, LightGreen);
   Bar(21, 100, 25, 380);
@@ -43,6 +44,7 @@ begin
   Bar(615, 100, 619, 380);
   Bar(26, 376, 619, 380);
 
+  <h32>{Коричневая часть}</h32>
   SetColor(Brown);
   SetFillStyle(SolidFill, Brown);
   Bar(0, 80, 20, 400);
@@ -50,6 +52,7 @@ begin
   Bar(21, 80, 619, 99);
   Bar(21, 381, 619, 400);
 
+  <h32>{Лунки}</h32>
   SetColor(Black);
   SetFillStyle(SolidFill, Black);
   FillEllipse(22, 102, 12, 12);
@@ -60,13 +63,16 @@ begin
   FillEllipse(320, 383, 12, 12);
 end;
 
+<h32>{Задаем положение шара и направление}</h32>
 procedure SetBall(x, y, r : integer; angle, speed : real);
 begin
+  {(x, y) начальная позиция, r радиус}
   xBall := x;
   yBall := y;
   rBall := r;
   sBall := speed;
   angle := -angle;
+  <h32>{(aBall, bBall) - вектор движения}</h32>
   aBall := Cos(angle);
   bBall := Sin(angle);
 end;
@@ -83,6 +89,7 @@ begin
   Dist := sqrt(sqr(x1 - x2) + sqr(y1 - y2));
 end;
 
+<h32>{Окажется ли шар в лунке}</h32>
 function inPocket(r : real) : boolean;
 var
   newX, newY : real;
@@ -100,10 +107,13 @@ begin
     inPocket := False;
 end;
 
+<h32>{Перемещение шара}</h32>
 procedure MoveBall;
 begin
+  <h32>{Если будет в лунке, то не меняем направление движения}</h32>
   if not inPocket(10) then
   begin
+    <h32>{Иначе изменяем вектор движения}</h32>
     if (xBall + sBall * aBall - rBall &lt;= 26) then
       aBall := -aBall;
     if (yBall + sBall * bBall - rBall &lt;= 105) then
@@ -119,6 +129,7 @@ begin
 end;
 
 begin
+  <h32>{t - угол запуска шара}</h32>
   write('Angle = ');
   read(t);
   t := t * Pi / 180;
@@ -133,15 +144,17 @@ begin
     DrawBall(Magenta);
     Delay(20);
 
-    if (xBall &lt;= 26) or (xBall &gt;= 615) or (yBall &lt;= 105) or (yBall &gt; 376) then
+    <h32>{Если шар в лунке, то конец}</h32>
+    if (xBall &lt;= 26) or (xBall &gt;= 615) or (yBall &lt;= 105) or (yBall &gt;= 376) then
     begin
       OutTextXY(320, 240, 'YOU WIN!');
       break;
     end;
 
-    DrawBall(Green);
+    DrawBall(Green); <h32>{Стираем шар}</h32>
     MoveBall;
 
+    <h32>{Каждые 100 шагов перерисовываем стол}</h32>
     cnt := cnt + 1;
     if cnt mod 100 = 0 then
       DrawBoard;
