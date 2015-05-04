@@ -1,0 +1,156 @@
+<html>
+							<head>
+							  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+
+							  <!-- link rel="stylesheet" href="http://acm.math.spbu.ru/~sk1/colorer1/xcode.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer1/highlight.pack.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script -->
+
+							  <link rel="stylesheet" title="Default" href="http://acm.math.spbu.ru/~sk1/colorer/my.css">
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/highlight.js"></script>
+							  <script src="http://acm.math.spbu.ru/~sk1/colorer/cpp.js"></script>
+							  <script>hljs.initHighlightingOnLoad();</script>
+                <style>
+                 h32 {
+                  background: #D3D3D3; /* Цвет фона под заголовком */
+                  padding: 0px; /* Поля вокруг текста */
+                 }
+                </style>
+							</head>
+
+							<body>
+
+							<pre><code>
+<h32>{Мячик скорее всего никогда не попадет в угловые лунки}</h32>
+uses
+  GRAPH, CRT;
+
+var
+  gd, gm, cnt : integer;
+  t : real;
+  xBall, yBall, rBall, sBall, aBall, bBall : real;
+
+procedure DrawBoard;
+begin
+  SetColor(Green);
+  SetFillStyle(SolidFill, Green);
+  Bar(26, 105, 614, 375);
+
+  SetColor(LightGreen);
+  SetFillStyle(SolidFill, LightGreen);
+  Bar(21, 100, 25, 380);
+  Bar(26, 100, 619, 104);
+  Bar(615, 100, 619, 380);
+  Bar(26, 376, 619, 380);
+
+  SetColor(Brown);
+  SetFillStyle(SolidFill, Brown);
+  Bar(0, 80, 20, 400);
+  Bar(640, 80, 620, 400);
+  Bar(21, 80, 619, 99);
+  Bar(21, 381, 619, 400);
+
+  SetColor(Black);
+  SetFillStyle(SolidFill, Black);
+  FillEllipse(22, 102, 12, 12);
+  FillEllipse(22, 378, 12, 12);
+  FillEllipse(618, 102, 12, 12);
+  FillEllipse(618, 378, 12, 12);
+  FillEllipse(320, 98, 12, 12);
+  FillEllipse(320, 383, 12, 12);
+end;
+
+procedure SetBall(x, y, r : integer; angle, speed : real);
+begin
+  xBall := x;
+  yBall := y;
+  rBall := r;
+  sBall := speed;
+  angle := -angle;
+  aBall := Cos(angle);
+  bBall := Sin(angle);
+end;
+
+procedure DrawBall(color : Word);
+begin
+  SetColor(color);
+  SetFillStyle(SolidFill, color);
+  FillEllipse(Round(xBall), Round(yBall), Round(rBall), Round(rBall));
+end;
+
+function Dist(x1, y1, x2, y2 : real) : real;
+begin
+  Dist := sqrt(sqr(x1 - x2) + sqr(y1 - y2));
+end;
+
+function inPocket(r : real) : boolean;
+var
+  newX, newY : real;
+begin
+  newX := xBall + sBall * aBall;
+  newY := yBall + sBall * bBall;
+  if (Dist(newX, newY, 22, 102) &lt;= r) or
+     (Dist(newX, newY, 22, 378) &lt;= r) or
+     (Dist(newX, newY, 618, 102) &lt;= r) or
+     (Dist(newX, newY, 618, 378) &lt;= r) or
+     (Dist(newX, newY, 320, 98) &lt;= r) or
+     (Dist(newX, newY, 320, 383) &lt;= r) then
+    inPocket := True
+  else
+    inPocket := False;
+end;
+
+procedure MoveBall;
+begin
+  if not inPocket(17) then
+  begin
+    if (xBall + sBall * aBall - rBall &lt;= 26) then
+      aBall := -aBall;
+    if (yBall + sBall * bBall - rBall &lt;= 105) then
+      bBall := -bBall;
+    if (xBall + sBall * aBall + rBall &gt;= 615) then
+      aBall := -aBall;
+    if (yBall + sBall * bBall + rBall &gt;= 376) then
+      bBall := -bBall;
+  end;
+
+  xBall := xBall + sBall * aBall;
+  yBall := yBall + sBall * bBall;
+end;
+
+begin
+  write('Angle = ');
+  read(t);
+  t := t * Pi / 180;
+
+  gd := detect;
+  InitGraph(gd, gm, '');
+
+  DrawBoard;
+  SetBall(320, 240, 9, t, 5);
+  cnt := 0;
+  repeat
+    DrawBall(Black);
+    Delay(20);
+
+    if inPocket(13) then
+    begin
+      OutTextXY(320, 240, 'YOU WIN!');
+      break;
+    end;
+
+    DrawBall(Green);
+    MoveBall;
+
+    cnt := cnt + 1;
+    if (cnt mod 100 = 0) then
+      DrawBoard;
+  until KeyPressed;
+  ReadKey;
+end.
+</code></pre>
+
+							</body>
+							</html>
+
+							<font style="visibility:hidden">
