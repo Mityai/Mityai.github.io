@@ -22,6 +22,7 @@
 
 							<pre><code>
 <h32>{Мячик скорее всего никогда не попадет в угловые лунки}</h32>
+<h32>{То что отмечено серым отвечает за попадание шара в лунку. Если не нужно, можно удалить (все равно криво сделано)}</h32>
 uses
   GRAPH, CRT;
 
@@ -77,7 +78,7 @@ begin
   SetFillStyle(SolidFill, color);
   FillEllipse(Round(xBall), Round(yBall), Round(rBall), Round(rBall));
 end;
-
+<h32>
 function Dist(x1, y1, x2, y2 : real) : real;
 begin
   Dist := sqrt(sqr(x1 - x2) + sqr(y1 - y2));
@@ -98,11 +99,11 @@ begin
     inPocket := True
   else
     inPocket := False;
-end;
+end;</h32>
 <!--<h32>{Перемещение шара}</h32>-->
 procedure MoveBall;
 begin<!--<h32>{Если будет в лунке, то не меняем направление движения}</h32>-->
-  if not inPocket(10) then
+  <h32>if not inPocket(10) then</h32>
   begin<!--<h32>{Иначе изменяем вектор движения}</h32>-->
     if (xBall + sBall * aBall - rBall &lt;= 26) then
       aBall := -aBall;
@@ -133,11 +134,11 @@ begin<!--<h32>{t - угол запуска шара}</h32>-->
     DrawBall(Magenta);
     Delay(20);
     <!--<h32>{Если шар в лунке, то конец}</h32>-->
-    if (xBall &lt;= 26) or (xBall &gt;= 615) or (yBall &lt;= 105) or (yBall &gt;= 376) then
+    <h32>if (xBall &lt;= 26) or (xBall &gt;= 615) or (yBall &lt;= 105) or (yBall &gt;= 376) then
     begin
       OutTextXY(320, 240, 'YOU WIN!');
       break;
-    end;
+    end;</h32>
 
     DrawBall(Green); <!--<h32>{Стираем шар}</h32>-->
     MoveBall;
